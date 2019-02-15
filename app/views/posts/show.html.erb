@@ -1,0 +1,55 @@
+  <div class="form-group">
+    <p>대표 이미지</p>
+    <%= image_tag @post.image.url(:thumb) if @post.image? %>
+  </div>
+
+  <div class="form-group">
+        <p>추가 이미지</p>
+        <% @post_attachments.each do |p| %>
+          <%= image_tag p.avatar_url(:thumb) %>
+        <% end %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 이름</p>
+    <%= @post.title %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 종류</p>
+    <%= @post.category.name %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 온도</p>
+    <%= @post.temperature %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 시간</p>
+    <%= @post.time %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 코멘트</p>
+    <%= render_with_hashtags(@post.description) %>
+  </div>
+
+
+  <div class="form-group">
+    <p>레시피 재료</p>
+    <% for @ingredient in @post.ingredients %>
+      <li><%= @ingredient.content %></li>
+    <% end %>
+  </div>
+
+
+  <div class="form-group">
+    <p>레시피 방법</p>
+    <% for @step in @post.steps %>
+      <li><%= @step.direction %></li>
+    <% end %>
+  </div>
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>

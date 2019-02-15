@@ -1,0 +1,83 @@
+<%= form_with(model: post, local: true) do |form| %>
+  <% if post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+      <% post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <p>대표 이미지</p>
+    <%= form.file_field :image %>
+    <%= form.hidden_field :image_cache %>
+
+    <% if post.image? %>
+      <%= image_tag post.image.thumb.url %>
+      <div>
+        <%= label_tag :remove_image do %> 삭제하기
+        <%= form.check_box :remove_image %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= form.fields_for :post_attachments do |p| %>
+        <p>추가 이미지</p>
+        <%= p.file_field :avatar, :multiple => true, name: "post_attachments[avatar][]" %>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 이름</p>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 종류</p>
+    <%= form.collection_select :category_id, Category.all, :id, :name %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 온도</p>
+    <%= form.number_field :temperature, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 시간</p>
+    <%= form.number_field :time, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 코멘트</p>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 재료</p>
+    <%= form.nested_fields_for :ingredients do |ingredient| %>
+      <%= ingredient.text_field :content %>
+      <%= ingredient.remove_nested_fields_link '삭제하기', data: { confirm: '정말 삭제하시겠습니까?' } %>
+    <% end %>
+    <%= form.add_nested_fields_link :ingredients, "+ 추가하기", class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <p>레시피 방법</p>
+    <%= form.nested_fields_for :steps do |step| %>
+      <%= step.text_field :direction %>
+      <%= step.remove_nested_fields_link '삭제하기', data: { confirm: '정말 삭제하시겠습니까?' } %>
+    <% end %>
+    <%= form.add_nested_fields_link :steps, "+ 추가하기", class: "form-control" %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
